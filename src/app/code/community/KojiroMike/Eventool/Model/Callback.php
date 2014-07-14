@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?php
 /**
  * Magento
  *
@@ -26,25 +25,43 @@
  */
 
 /**
- * Eventool Configuration
+ * Eventool Callback Registrar
  *
  * @category    KojiroMike
  * @package     KojiroMike_Eventool
  * @author      Michael A. Smith <michael@smith-li.com>
  */
--->
-<config>
-    <global>
-        <helpers>
-            <eventool>
-                <class>KojiroMike_Eventool_Helper</class>
-            </eventool>
-        </helpers>
-        <models>
-            <eventool>
-                <class>KojiroMike_Eventool_Model</class>
-            </eventool>
-        </models>
-    </global>
-</config>
+class KojiroMike_Eventool_Model_Callback
+{
+	/** @var array $callbacks array of callables that you can use as arbitrary observers. */
+	protected $callbacks = array();
+
+	/**
+	 * Register a callable as a member of this singleton
+	 *
+	 * @param string $name The name of the callback
+	 * @param callable $callback The callable to call
+	 * @return self
+	 */
+	public function addCallback($name, $callback)
+	{
+		$this->callbacks[$name] = $callback;
+	}
+
+	/**
+	 * Call a registered callback
+	 */
+	public function call($name, array $arguments)
+	{
+		return call_user_func_array($this->callbacks[$name], $arguments);
+	}
+
+	/**
+	 * Call a registered callback as a method of this singleton
+	 */
+	public function __call($name, array $arguments)
+	{
+		return $this->call($name, $arguments);
+	}
+}
 
