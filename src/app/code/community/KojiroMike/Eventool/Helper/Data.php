@@ -42,14 +42,14 @@ class KojiroMike_Eventool_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @param string $type [model, disabled, singleton]
 	 * @param string $area One of the Mage_Core_Model_App_Area::AREA_* consts
 	 * @param string $handler The observer node name. Leave this blank to get a guaranteed-unique randomish one.
-	 * @return string The observer node name (so you can unregister the event) or empty string on failure
+	 * @return string The observer node name (so you can unregister the event)
 	 */
 	public function registerObserver($event, $class, $method, $type='model', $area='global', $handler='')
 	{
 		//sales_quote_save_before
 		$appConfig = Mage::getConfig();
 		if (!$handler) {
-			$pre = uniqId($class . '::' . $method);
+			$handler = uniqId($class . '::' . $method);
 		}
 		$path = "config/$area/events/$event/observers/$handler/";
 		$nodes = array(
@@ -60,6 +60,7 @@ class KojiroMike_Eventool_Helper_Data extends Mage_Core_Helper_Abstract
 		foreach ($nodes as $base => $val) {
 			$appConfig->setNode($path . $base, $val);
 		}
+		return $handler;
 	}
 	/**
 	 * Disable an event handler.
