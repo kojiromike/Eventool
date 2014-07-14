@@ -49,9 +49,9 @@ class KojiroMike_Eventool_Helper_Data extends Mage_Core_Helper_Abstract
 		//sales_quote_save_before
 		$appConfig = Mage::getConfig();
 		if (!$handler) {
-			$handler = uniqId($class . '::' . $method);
+			$handler = uniqId(strtr($class, '/', '_') . '::' . $method);
 		}
-		$path = "config/$area/events/$event/observers/$handler/";
+		$path = "$area/events/$event/observers/$handler/";
 		$nodes = array(
 			'type' => $type,
 			'class' => $class,
@@ -73,7 +73,7 @@ class KojiroMike_Eventool_Helper_Data extends Mage_Core_Helper_Abstract
 	public function disableObserver($event, $handler, $area='global')
 	{
 		$appConfig = Mage::getConfig();
-		$path = "config/$area/events/$event/observers/$handler/type";
+		$path = "$area/events/$event/observers/$handler/type";
 		$prev = (string) $appConfig->getNode($path);
 		$appConfig->setNode($path, 'disabled');
 		return $prev;
